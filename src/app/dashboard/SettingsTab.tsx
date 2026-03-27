@@ -95,7 +95,7 @@ export default function SettingsTab() {
               {activeSetting === "Notifications" ? (
                 <p className="text-white/60 mb-6 font-medium">Toggle push notifications to get alerted when friends message you.</p>
               ) : activeSetting === "NGL Pro" ? (
-                <p className="text-yellow-500 mb-6 font-medium">Unlock premium clues and completely ad-free experience with NGL Pro.</p>
+                <p className="text-yellow-500 mb-6 font-medium">NGL Pro is permanently unlocked for free! You have full access to premium clues and a completely ad-free experience.</p>
               ) : (
                 <p className="text-white/60 mb-6 font-medium">This generic setting panel is under construction.</p>
               )}

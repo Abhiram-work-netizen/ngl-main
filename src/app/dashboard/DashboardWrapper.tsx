@@ -106,10 +106,10 @@ export default function DashboardWrapper({ username, messages }: { username: str
                   <Crown size={32} className="text-white" />
                 </div>
                 
-                <h2 className="text-2xl font-bold text-white mb-2">NGL Pro</h2>
-                <p className="text-white/60 mb-8 font-medium">Unlock exclusive clues to see who sent you messages!</p>
+                <h2 className="text-2xl font-bold text-white mb-2">NGL Pro Active!</h2>
+                <p className="text-white/60 mb-8 font-medium">You have been granted lifetime free access to NGL Pro.</p>
 
-                <div className="w-full space-y-3 mb-8">
+                <div className="w-full space-y-3 mb-8 text-left">
                   <div className="bg-white/5 rounded-xl p-3 flex items-center gap-3">
                     <CheckCircle2 size={20} className="text-yellow-500" />
                     <span className="text-white font-medium text-sm">See device type & location</span>
@@ -124,15 +124,9 @@ export default function DashboardWrapper({ username, messages }: { username: str
                   </div>
                 </div>
 
-                <button
-                  onClick={() => {
-                    alert("This is a dummy application. Payment gateway not integrated!");
-                    setShowProModal(false);
-                  }}
-                  className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold text-[17px] py-4 rounded-full hover:opacity-90 active:scale-95 transition-all outline-none"
-                >
-                  Unlock for $9.99/week
-                </button>
+                <p className="text-yellow-500 text-sm font-bold mt-2">
+                  Click any message card to use your premium clues!
+                </p>
               </div>
             </motion.div>
           </motion.div>
