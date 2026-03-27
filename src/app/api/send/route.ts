@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
   try {
@@ -21,9 +22,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Optional: get sender ID if logged in (for anonymous but tracked internally, or purely anon)
-    const { data: { session } } = await supabase.auth.getSession();
-    const senderId = session?.user?.id || null;
+    // Optional: get sender ID if logged in
+    const loggedInUser = cookies().get("ngl_user")?.value;
+    let senderId = null;
+    if (loggedInUser) {
+      const { data: currentUser } = await supabase.from("users").select("id").eq("username", loggedInUser).single();
+      if (currentUser) senderId = currentUser.id;
+    }
 
     const { error: insertError } = await supabase.from("messages").insert({
       receiver_id: user.id,

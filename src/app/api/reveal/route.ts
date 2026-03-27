@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
   try {
@@ -9,11 +10,14 @@ export async function POST(request: Request) {
     }
 
     const supabase = createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const loggedInUser = cookies().get("ngl_user")?.value;
 
-    if (!session) {
+    if (!loggedInUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const { data: currentUser } = await supabase.from("users").select("id").eq("username", loggedInUser).single();
+    if (!currentUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     // Check if the current user is the receiver of the message
     const { data: message, error: messageError } = await supabase
@@ -26,7 +30,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Message not found" }, { status: 404 });
     }
 
-    if (message.receiver_id !== session.user.id) {
+    if (message.receiver_id !== currentUser.id) {
       return NextResponse.json({ error: "Unauthorized to reveal this message" }, { status: 403 });
     }
 

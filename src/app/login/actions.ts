@@ -1,72 +1,41 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function login(formData: FormData) {
-  const supabase = createClient();
-
-  const data = {
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-  };
-
-  const { error } = await supabase.auth.signInWithPassword(data);
-
-  if (error) {
-    return redirect("/login?error=Could not authenticate user");
-  }
-
-  revalidatePath("/", "layout");
-  redirect("/dashboard");
-}
-
-export async function signup(formData: FormData) {
-  const supabase = createClient();
-
-  const data = {
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-    username: formData.get("username") as string,
-  };
+  const username = (formData.get("username") as string).trim().toLowerCase();
   
-  // Basic validation
-  if (!data.email || !data.password || !data.username) {
-    return redirect("/login?error=All fields are required");
-  }
-  
-  if (data.username.length < 3) {
+  if (!username || username.length < 3) {
     return redirect("/login?error=Username must be at least 3 characters");
   }
 
-  // Check if username is taken
-  const { data: existingUser } = await supabase
+  const supabase = createClient();
+
+  // Create or load the dummy user
+  const { data: user } = await supabase
     .from("users")
     .select("id")
-    .eq("username", data.username.toLowerCase())
+    .eq("username", username)
     .single();
 
-  if (existingUser) {
-    return redirect("/login?mode=signup&error=Username is already taken");
+  if (!user) {
+    const { error: insertError } = await supabase.from("users").insert({
+      username: username,
+      email: `${username}@dummy.local`, // dummy email
+    });
+    if (insertError) {
+      return redirect("/login?error=" + encodeURIComponent(insertError.message));
+    }
   }
 
-  const { error } = await supabase.auth.signUp({
-    email: data.email,
-    password: data.password,
-    options: {
-      data: {
-        username: data.username.toLowerCase(),
-      },
-    },
+  // Set the dummy auth cookie
+  cookies().set("ngl_user", username, { 
+    httpOnly: true, 
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 60 * 24 * 365 
   });
-
-  if (error) {
-    return redirect("/login?mode=signup&error=" + encodeURIComponent(error.message));
-  }
-
-  revalidatePath("/", "layout");
-  // Assuming auto confirm is on, or inform user to check email.
-  // For this project MVP, we assume they can login immediately.
+  
   redirect("/dashboard");
 }
