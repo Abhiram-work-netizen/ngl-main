@@ -1,8 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { Bell, Heart, Crown, Paintbrush, FileText, Delete, ChevronRight, ShieldAlert, Ban, PauseCircle, Settings as SettingsIcon } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function SettingsTab() {
+  const [activeSetting, setActiveSetting] = useState<string | null>(null);
+
   const resetAccount = async () => {
     if (confirm("Are you sure? This will delete all your messages, views, and your account forever.")) {
       try {
@@ -19,7 +23,7 @@ export default function SettingsTab() {
   };
 
   return (
-    <div className="p-4 pt-8 pb-24 max-w-sm mx-auto">
+    <div className="p-4 pt-8 pb-24 max-w-sm mx-auto relative">
       
       {/* Preferences Section */}
       <div className="mb-8">
@@ -28,10 +32,10 @@ export default function SettingsTab() {
         </h3>
         
         <div className="bg-[#11131c] rounded-3xl overflow-hidden border border-white/5">
-          <MenuItem icon={<Bell size={18} />} title="Notifications" />
-          <MenuItem icon={<Heart size={18} />} title="Team NGL messages" />
-          <MenuItem icon={<Crown size={18} />} title="NGL Pro" />
-          <MenuItem icon={<Paintbrush size={18} />} title="Appearance" hasBorder={false} />
+          <MenuItem icon={<Bell size={18} />} title="Notifications" onClick={() => setActiveSetting("Notifications")} />
+          <MenuItem icon={<Heart size={18} />} title="Team NGL messages" onClick={() => setActiveSetting("Team NGL messages")} />
+          <MenuItem icon={<Crown size={18} />} title="NGL Pro" onClick={() => setActiveSetting("NGL Pro")} />
+          <MenuItem icon={<Paintbrush size={18} />} title="Appearance" onClick={() => setActiveSetting("Appearance")} hasBorder={false} />
         </div>
       </div>
 
@@ -42,10 +46,10 @@ export default function SettingsTab() {
         </h3>
         
         <div className="bg-[#11131c] rounded-3xl overflow-hidden border border-white/5">
-          <MenuItem icon={<FileText size={18} />} title="Hidden words" />
-          <MenuItem icon={<Ban size={18} />} title="Blocked users" />
-          <MenuItem icon={<PauseCircle size={18} />} title="Pause my link" />
-          <MenuItem icon={<SettingsIcon size={18} />} title="Advanced message filtering" hasBorder={false} />
+          <MenuItem icon={<FileText size={18} />} title="Hidden words" onClick={() => setActiveSetting("Hidden words")} />
+          <MenuItem icon={<Ban size={18} />} title="Blocked users" onClick={() => setActiveSetting("Blocked users")} />
+          <MenuItem icon={<PauseCircle size={18} />} title="Pause my link" onClick={() => setActiveSetting("Pause my link")} />
+          <MenuItem icon={<SettingsIcon size={18} />} title="Advanced message filtering" onClick={() => setActiveSetting("Advanced message filtering")} hasBorder={false} />
         </div>
       </div>
       
@@ -56,10 +60,10 @@ export default function SettingsTab() {
         </h3>
         
         <div className="bg-[#11131c] rounded-3xl overflow-hidden border border-white/5">
-          <MenuItem icon={<ShieldAlert size={18} />} title="I need help" />
-          <MenuItem icon={<ShieldAlert size={18} />} title="Safety resources" />
-          <MenuItem icon={<FileText size={18} />} title="Terms of use" />
-          <MenuItem icon={<ShieldAlert size={18} />} title="Privacy policy" />
+          <MenuItem icon={<ShieldAlert size={18} />} title="I need help" onClick={() => setActiveSetting("I need help")} />
+          <MenuItem icon={<ShieldAlert size={18} />} title="Safety resources" onClick={() => setActiveSetting("Safety resources")} />
+          <MenuItem icon={<FileText size={18} />} title="Terms of use" onClick={() => setActiveSetting("Terms of use")} />
+          <MenuItem icon={<ShieldAlert size={18} />} title="Privacy policy" onClick={() => setActiveSetting("Privacy policy")} />
           <MenuItem 
             icon={<Delete size={18} className="text-red-500" />} 
             title="Delete account" 
@@ -69,6 +73,43 @@ export default function SettingsTab() {
           />
         </div>
       </div>
+
+      {/* Generic Settings Detail Modal */}
+      <AnimatePresence>
+        {activeSetting && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          >
+            <motion.div 
+              initial={{ scale: 0.95, y: 10 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 10 }}
+              className="bg-[#11131c] border border-white/10 w-full max-w-[320px] rounded-3xl p-6 relative shadow-2xl flex flex-col items-center text-center"
+            >
+              <h2 className="text-xl font-bold text-white mb-2">{activeSetting}</h2>
+              <div className="w-16 h-1 bg-white/10 rounded-full mb-6 mx-auto" />
+              
+              {activeSetting === "Notifications" ? (
+                <p className="text-white/60 mb-6 font-medium">Toggle push notifications to get alerted when friends message you.</p>
+              ) : activeSetting === "NGL Pro" ? (
+                <p className="text-yellow-500 mb-6 font-medium">Unlock premium clues and completely ad-free experience with NGL Pro.</p>
+              ) : (
+                <p className="text-white/60 mb-6 font-medium">This generic setting panel is under construction.</p>
+              )}
+
+              <button
+                onClick={() => setActiveSetting(null)}
+                className="w-full bg-white/10 hover:bg-white/20 text-white font-bold text-lg py-3 rounded-full transition-all outline-none border border-white/5 active:scale-95"
+              >
+                Close Settings
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </div>
   );

@@ -14,7 +14,24 @@ export default function PlayTab({ username }: { username: string }) {
       
       {/* Action Buttons Top */}
       <div className="flex gap-4 mb-8">
-        <button className="bg-white text-black font-bold py-3 px-6 rounded-full flex items-center gap-2 hover:bg-gray-200 transition-colors">
+        <button 
+          onClick={async () => {
+            if (navigator.share) {
+              try {
+                await navigator.share({
+                  title: 'Send me anonymous messages!',
+                  url: profileUrl
+                });
+              } catch (err) {
+                console.log("Share failed:", err);
+              }
+            } else {
+              navigator.clipboard.writeText(profileUrl);
+              alert("Link copied to clipboard (Share not supported on this browser)");
+            }
+          }}
+          className="bg-white text-black font-bold py-3 px-6 rounded-full flex items-center gap-2 hover:bg-gray-200 transition-colors"
+        >
           <Share size={18} /> Share!
         </button>
         <button 
