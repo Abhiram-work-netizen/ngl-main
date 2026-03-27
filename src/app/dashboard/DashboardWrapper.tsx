@@ -1,3 +1,4 @@
+"use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Eye, Settings, Crown, CheckCircle2 } from "lucide-react";
