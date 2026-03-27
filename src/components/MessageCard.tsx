@@ -3,9 +3,10 @@
 
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { CheckCircle2, ChevronRight, Eye } from "lucide-react";
+import { CheckCircle2, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export default function MessageCard({ message }: { message: any }) {
   const [revealed, setRevealed] = useState(message.revealed);
   const [sender, setSender] = useState(message.sender);

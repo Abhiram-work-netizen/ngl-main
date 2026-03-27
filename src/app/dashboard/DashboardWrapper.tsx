@@ -6,6 +6,7 @@ import MessageCard from "@/components/MessageCard";
 import PlayTab from "./PlayTab";
 import SettingsTab from "./SettingsTab";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export default function DashboardWrapper({ username, messages }: { username: string, messages: any[] }) {
   const [activeTab, setActiveTab] = useState<"PLAY" | "INBOX" | "SETTINGS">("INBOX");
 

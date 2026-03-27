@@ -62,6 +62,7 @@ export default function PublicProfileClient({ params }: { params: { username: st
         {/* Top User Info */}
         <div className="flex items-center gap-3 p-4 px-5">
           <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 bg-gray-200">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${username}`} alt="avatar" className="w-full h-full object-cover" />
           </div>
           <div className="flex flex-col">

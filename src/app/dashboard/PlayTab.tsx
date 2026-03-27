@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Share, Link as LinkIcon, Download } from "lucide-react";
-import Image from "next/image";
 
 export default function PlayTab({ username }: { username: string }) {
   const [step, setStep] = useState(1);
@@ -70,7 +69,7 @@ export default function PlayTab({ username }: { username: string }) {
         {/* Fake Instagram Image Placeholder */}
         <div className="w-full aspect-[4/5] bg-gradient-to-br from-pink-500 to-orange-500 rounded-3xl relative overflow-hidden flex items-center justify-center">
            <p className="text-white font-bold text-3xl font-serif italic text-center px-4">
-             "Step {step} Simulation"
+             &quot;Step {step} Simulation&quot;
            </p>
            {/* Click hand indicator */}
            <div className="absolute top-1/3 right-1/3 text-4xl animate-bounce pointer-events-none">
